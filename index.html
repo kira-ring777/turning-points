@@ -111,16 +111,16 @@ function natAt(k,jd){const o=NAT[k],x=(jd-NAT_START_JD)/o.step,i=Math.floor(x);
 function meanNode(jd){const T=(jd-2451545.0)/36525;
   const O=125.0445479-1934.1362891*T+0.0020754*T*T+T*T*T/467441-T*T*T*T/60616000;
   return ((O%360)+360)%360;}
-/* ★2026-09-16 太陽の偏りを補正する。
-   ⚠️きっかけ＝Hiromi「進めた太陽が生まれたときの木星と向かい合う年は、AstroGoldでは Sep 22 1982。ツールは1982年8月」。
-   ★調べたら**太陽の値だけ、ゆっくり増える偏り**が乗っていた（1935年 +0.031度 → 2026年 +0.051度）。
-   ★pyswissephの8点に直線を当てて引く。**残差は最大0.007度＝約2日**（2026-09-16 実測）。
-   ⚠️SAでは「1度＝1年」なので、0.05度の偏りが**約18日**のずれになっていた。 */
-function sunBias(jd){return 0.05001893+5.2225660438e-7*(jd-2451545.0);}
+/* ⚠️★★2026-09-16 太陽のずれを直した経緯（同じことをしないため）
+   きっかけ＝Hiromi「進めた太陽が生まれたときの木星と向かい合う年は、AstroGoldでは Sep 22 1982。ツールは1982年8月」。
+   ★原因は2つあった。
+   ①**10日刻みの点を直線でつないでいた**（太陽の速さの変化を拾えない）→ 3次補間にした
+   ②★★**データの丸め誤差が積み上がっていた**＝差分を小数3桁で持っていたので、4968点ぶん足すうちに0.05度ずれた
+      → **太陽だけ小数4桁で作り直した**（+5KB）。⚠️一時期入れていた `sunBias()` の補正は、これで不要になったので外した
+   ⚠️**SAは「1度＝1年」。0.01度のずれが、そのまま約4日になる。** ★天体暦を触ったら、必ずpyswissephと突き合わせる */
 function lonAt(k,jd){const x=(jd-EPH_START_JD)/EPH_STEP,i=Math.floor(x),a=SER[k];
   if(i<0||i+1>=EPH_N)return null;
-  const v=(i<1||i+2>=EPH_N)?a[i]+(a[i+1]-a[i])*(x-i):cubic(a[i-1],a[i],a[i+1],a[i+2],x-i);
-  return (k==='SUN')?v-sunBias(jd):v;}
+  return (i<1||i+2>=EPH_N)?a[i]+(a[i+1]-a[i])*(x-i):cubic(a[i-1],a[i],a[i+1],a[i+2],x-i);}
 function jdOf(y,m,d,h,mi){const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;
   const jdn=d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;
   return jdn-0.5-9/24+((h||0)+(mi||0)/60)/24;}
