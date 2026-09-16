@@ -79,7 +79,7 @@ footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-si
 
 <footer>
   <p>木星・土星・キロンが生まれたときの位置に戻る年（回帰）と、進めた太陽が星座を移る年・生まれたときの天体（月〜冥王星）に届く年・アセンダントとMCに届く年を計算しています。「進めた」は、生まれたあとの太陽が実際に動いた分だけ、出生図ぜんぶを動かすという意味です（ソーラーアーク法。1年に約1度進みます）。</p>
-  <p style="margin-top:10px">生まれたときの天体・アセンダント・MCへの届き方は3つを見ています。<strong>重なる</strong>（コンジャンクション＝0度）、<strong>向かい合う</strong>（オポジション＝180度）、<strong>直角になる</strong>（スクエア＝90度）。この3つは、できごととして表に出やすいと言われます。オーブ（どこまでを「届いた」とするか）は0.5度なので、<strong>書かれた年の前後半年ほど</strong>が効く幅です。天体の位置は <a href="https://www.astro.com/swisseph/" style="color:var(--sub)">Swiss Ephemeris</a> で算出したデータを使っています。</p>
+  <p style="margin-top:10px">生まれたときの天体・アセンダント・MCへの届き方は3つを見ています。<strong>重なる</strong>（コンジャンクション＝0度）、<strong>向かい合う</strong>（オポジション＝180度）、<strong>直角になる</strong>（スクエア＝90度）。この3つは、できごととして表に出やすいと言われます。オーブ（どこまでを「届いた」とするか）は1度なので、<strong>書かれた年の前後1年ほど</strong>が効く幅です。天体の位置は <a href="https://www.astro.com/swisseph/" style="color:var(--sub)">Swiss Ephemeris</a> で算出したデータを使っています。</p>
   <p style="margin-top:10px">作成：旅する星と香りのセラピスト ひろみ</p>
 </footer>
 
@@ -99,7 +99,7 @@ function natAt(k,jd){const o=NAT[k],x=(jd-NAT_START_JD)/o.step,i=Math.floor(x);
 /* ── ドラゴンヘッド（平均交点＝Mean Node）──
    ★2026-09-16 Hiromi「MCとASCとDH・DTにSA太陽が関わる時はとても重要になります」で追加。
    ★Hiromiの読みは**Mean Node**（AstroGoldと一致・True Nodeは使わない／[[reference_node_calculation]]）。
-   ⭕生まれた時間は要らない（1日で0.05度しか動かない＝オーブ0.5度に対して十分小さい）。
+   ⭕生まれた時間は要らない（1日で0.05度しか動かない＝オーブ1度に対して十分小さい）。
    ⚠️DT（ドラゴンテイル）は反対の端なので、別の行にしない＝180度が「向かい合う年」に当たる。 */
 function meanNode(jd){const T=(jd-2451545.0)/36525;
   const O=125.0445479-1934.1362891*T+0.0020754*T*T+T*T*T/467441-T*T*T*T/60616000;
@@ -172,9 +172,13 @@ function saIngress(j0,natal,maxAge){                                   // サイ
       out.push({age:hi,sign:sb});}}
   return out;}
 /* ★SAで見るのは コンジャンクション（重なる）・オポジション（向かい合う）・スクエア（直角）の3つ。
-   現象になって表れやすいと言われるため。⚠️オーブは0.5度＝SAは年に約1度なので、前後半年ほどが効く幅。
+   現象になって表れやすいと言われるため。
+   ★★2026-09-16 Hiromi決定＝**オーブを0.5度から1度に広げた（前後1年）**。理由は2つ。
+   ①**出生地を県単位で持っている**ので、アセンダント・MCはもともと1度ほどの幅がある（経度0.5度＝時刻2分＝ASC約0.5度）。
+   ②⚠️**この天体暦は0.01度刻みに圧縮してあり、pyswissephとの差が最大0.07年（約25日）**＝AstroGoldと数日ずれる。
+     ★オーブ1度（前後1年）なら、このずれは幅の中に収まる。
    4つの接点は90度ごとに並び、SAは90年で約89度しか進まないので、ふつう一生に1回だけ当たる。 */
-const SA_ORB=0.5;
+const SA_ORB=1.0;
 const ASPECTS=[[0,"に重なる"],[90,"と直角になる"],[180,"と向かい合う"],[270,"と直角になる"]];
 function saAspect(j0,natal,target,maxAge){
   const base=((target-natal)%360+360)%360;
