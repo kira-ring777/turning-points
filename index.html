@@ -94,8 +94,15 @@ const SER={SUN:cum(EPH_SUN),JUP:cum(EPH_JUP),SAT:cum(EPH_SAT),CHI:cum(EPH_CHI)};
 /* ── 生まれたときの天体（SAの届く先）。0.01度の整数差分 → 累積。精度＝pyswissephとの差 最大0.1度（2026-09-15 3000点で検算） ── */
 const NAT={};[['MOON',NAT_MOON],['MER',NAT_MER],['VEN',NAT_VEN],['MAR',NAT_MAR],['URA',NAT_URA],['NEP',NAT_NEP],['PLU',NAT_PLU]]
   .forEach(([k,o])=>{const c=new Float64Array(o.d.length);let t=0;for(let i=0;i<o.d.length;i++){t+=o.d[i];c[i]=t/100;}NAT[k]={step:o.step,n:o.n,c:c};});
+/* ★2026-09-16 直線補間 → 3次補間（Catmull-Rom）に変更。
+   ⚠️きっかけ＝Hiromi「進めた太陽が木星と向かい合う年が、AstroGoldではSep 22 1982。ツールは1982年8月」。
+   ★原因＝**10日刻みの点を直線でつないでいた**ので、太陽の速さの変化を拾えず弧が0.069度足りなかった（＝約24日）。
+   ★データは増やさずに、前後2点ずつ（計4点）から曲線で求める。 */
+function cubic(a,b,c,d,t){const t2=t*t,t3=t2*t;
+  return 0.5*((2*b)+(-a+c)*t+(2*a-5*b+4*c-d)*t2+(-a+3*b-3*c+d)*t3);}
 function natAt(k,jd){const o=NAT[k],x=(jd-NAT_START_JD)/o.step,i=Math.floor(x);
-  if(i<0||i+1>=o.n)return null;return o.c[i]+(o.c[i+1]-o.c[i])*(x-i);}
+  if(i<1||i+2>=o.n)return (i<0||i+1>=o.n)?null:o.c[i]+(o.c[i+1]-o.c[i])*(x-i);
+  return cubic(o.c[i-1],o.c[i],o.c[i+1],o.c[i+2],x-i);}
 /* ── ドラゴンヘッド（平均交点＝Mean Node）──
    ★2026-09-16 Hiromi「MCとASCとDH・DTにSA太陽が関わる時はとても重要になります」で追加。
    ★Hiromiの読みは**Mean Node**（AstroGoldと一致・True Nodeは使わない／[[reference_node_calculation]]）。
@@ -104,8 +111,16 @@ function natAt(k,jd){const o=NAT[k],x=(jd-NAT_START_JD)/o.step,i=Math.floor(x);
 function meanNode(jd){const T=(jd-2451545.0)/36525;
   const O=125.0445479-1934.1362891*T+0.0020754*T*T+T*T*T/467441-T*T*T*T/60616000;
   return ((O%360)+360)%360;}
-function lonAt(k,jd){const x=(jd-EPH_START_JD)/EPH_STEP,i=Math.floor(x);
-  if(i<0||i+1>=EPH_N)return null;const a=SER[k];return a[i]+(a[i+1]-a[i])*(x-i);}
+/* ★2026-09-16 太陽の偏りを補正する。
+   ⚠️きっかけ＝Hiromi「進めた太陽が生まれたときの木星と向かい合う年は、AstroGoldでは Sep 22 1982。ツールは1982年8月」。
+   ★調べたら**太陽の値だけ、ゆっくり増える偏り**が乗っていた（1935年 +0.031度 → 2026年 +0.051度）。
+   ★pyswissephの8点に直線を当てて引く。**残差は最大0.007度＝約2日**（2026-09-16 実測）。
+   ⚠️SAでは「1度＝1年」なので、0.05度の偏りが**約18日**のずれになっていた。 */
+function sunBias(jd){return 0.05001893+5.2225660438e-7*(jd-2451545.0);}
+function lonAt(k,jd){const x=(jd-EPH_START_JD)/EPH_STEP,i=Math.floor(x),a=SER[k];
+  if(i<0||i+1>=EPH_N)return null;
+  const v=(i<1||i+2>=EPH_N)?a[i]+(a[i+1]-a[i])*(x-i):cubic(a[i-1],a[i],a[i+1],a[i+2],x-i);
+  return (k==='SUN')?v-sunBias(jd):v;}
 function jdOf(y,m,d,h,mi){const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;
   const jdn=d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;
   return jdn-0.5-9/24+((h||0)+(mi||0)/60)/24;}
