@@ -256,9 +256,10 @@ function run(){
     ['ASC','MC'].forEach(k=>{
       const r=saAspect(j0,ns,am[k],90);
       if(!r)return;
+      /* ★2026-09-16 Hiromi「SAについてはすべてのものが一生に一回です」＝軸だけに「一生に一度」の札を出すと、
+         ほかのSAの行が「二度来る」と読めてしまう。★軸は「とくに大きい」に変え、「一生に一度」はキロン回帰だけに残した。 */
       rows.push({age:r.age,jd:j0+r.age*TROP,name:"進めた太陽が"+AXNAME[k]+r.ja+"年",
-        note:(r.ang===0||r.ang===180)?"一生に一度":"あなただけの年",
-        once:(r.ang===0||r.ang===180),big:(r.ang===0||r.ang===180)});});
+        note:"★大きな節目",big:true});});
     angles=am;
   }
 
@@ -283,9 +284,14 @@ function run(){
     const cls=r.age<nowAge?'past':(r.age-nowAge<2?'soon':'');
     h+='<tr class="'+cls+'"><td class="y">'+fy(r.jd)+'</td><td class="y">'+Math.round(r.age)+'</td><td>'+r.name+
        (r.once?'<span class="tag once">一生に一度</span>':'')+
+       /* ★2026-09-16 Hiromi「MCとASCとDH・DTにSA太陽が関わる時はとても重要」＝軸とドラゴンヘッドに札を出す。
+          ⚠️「一生に一度」の札は付けない（SAはどれも一度きりなので、そこだけに付けると誤解になる）。 */
+       (r.big&&!r.once?'<span class="tag once">とくに大きい</span>':'')+
        (r.cross&&r.cross>1?'<span class="tag">'+r.cross+'回とおります</span>':'')+'</td></tr>';
   });
   h+='</table>';
+  /* ★2026-09-16 Hiromi「SAについてはすべてのものが一生に一回です」。札は増やさず、ここで一行だけ言う。 */
+  h+='<p class="note" style="margin-top:12px">「進めた太陽が〜」の行は、<strong>どれも一生に一度きり</strong>です。90年かけても87度ほどしか進まないので、同じ天体に二度は届きません。</p>';
   if(!hasTime){
     h+='<p class="note" style="margin-top:14px">生まれた時間がわかると、<strong>とくに大きい節目</strong>（アセンダント・MC）と、生まれたときの月に届く年まで出ます。上の「＋ 生まれた時間と場所がわかる方へ」から入れてみてください。</p>';
   }
