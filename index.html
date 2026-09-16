@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>あなたの節目の年 ― 星で数える</title>
+<style>
+:root{ --gold:#B08D57; --gold-l:#E3D3BC; --cream:#FBF7F1; --text:#3A3632; --sub:#7C736A; --line:#EAE3D9; --hl:#A8577B; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;color:var(--text);background:#fff;line-height:1.9;font-size:16px}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 72px}
+h1{font-family:"Hiragino Mincho ProN",serif;font-size:23px;font-weight:600;letter-spacing:.04em;margin-bottom:8px}
+.lead{color:var(--sub);font-size:14.5px;margin-bottom:26px}
+.card{background:var(--cream);border:1px solid var(--line);border-radius:8px;padding:20px;margin-bottom:22px}
+label{display:block;font-size:13.5px;color:var(--sub);margin-bottom:6px;letter-spacing:.03em}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.row>div{flex:1;min-width:92px}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:6px;font-size:16px;background:#fff;color:var(--text);font-family:inherit}
+button{width:100%;padding:14px;border:0;border-radius:6px;background:var(--gold);color:#fff;font-size:16px;font-family:inherit;letter-spacing:.08em;cursor:pointer;margin-top:4px}
+button:hover{background:#9C7B49}
+details.opt{margin-top:4px;border-top:1px dashed var(--gold-l);padding-top:14px}
+details.opt summary{cursor:pointer;font-size:14px;color:var(--gold);letter-spacing:.03em;list-style:none}
+details.opt summary::-webkit-details-marker{display:none}
+details.opt summary::before{content:"＋ ";font-weight:700}
+details.opt[open] summary::before{content:"− "}
+.note{font-size:13px;color:var(--sub);margin-top:8px;line-height:1.8}
+#out{display:none}
+.next{background:#fff;border:1px solid var(--gold);border-left:5px solid var(--gold);border-radius:6px;padding:18px 20px;margin-bottom:24px}
+.next .lbl{font-size:12px;color:var(--gold);letter-spacing:.18em;margin-bottom:4px}
+.next .big{font-family:"Hiragino Mincho ProN",serif;font-size:21px;font-weight:600}
+.next .sub{font-size:14px;color:var(--sub);margin-top:4px}
+h2{font-family:"Hiragino Mincho ProN",serif;font-size:17px;font-weight:600;color:var(--gold);border-bottom:1px solid var(--gold-l);padding-bottom:6px;margin:28px 0 12px}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--sub);font-size:12.5px;letter-spacing:.05em}
+td.y{white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.past td{color:#AAA299}
+tr.soon td{background:#FFFBF4}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;background:var(--gold-l);color:#6B5636;margin-left:6px;vertical-align:2px}
+.tag.once{background:#F2DDE7;color:var(--hl)}
+.cta{margin-top:36px;background:var(--cream);border:1px solid var(--gold-l);border-radius:8px;padding:22px}
+.cta h3{font-family:"Hiragino Mincho ProN",serif;font-size:16.5px;font-weight:600;margin-bottom:8px}
+.cta p{font-size:14.5px;margin-bottom:12px}
+.cta a{display:inline-block;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-l);font-size:14.5px}
+footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--sub);line-height:1.85}
+.err{color:#B5453F;font-size:14px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>あなたの節目の年</h1>
+<p class="lead">生年月日を入れると、これまでとこれからの「節目の年」が出ます。出生時刻はなくても使えます。</p>
+
+<div class="card">
+  <label>生まれた日</label>
+  <div class="row">
+    <div><input id="by" type="number" inputmode="numeric" placeholder="1968" min="1920" max="2045"></div>
+    <div><input id="bm" type="number" inputmode="numeric" placeholder="7" min="1" max="12"></div>
+    <div><input id="bd" type="number" inputmode="numeric" placeholder="2" min="1" max="31"></div>
+  </div>
+
+  <details class="opt">
+    <summary>生まれた時間と場所がわかる方へ</summary>
+    <p class="note">入れると、<strong>とくに大きい節目</strong>（進めた太陽が、アセンダントとMCに届く年）と、進めた太陽が生まれたときの月に届く年まで出ます。わからなければ空のままで大丈夫です。</p>
+    <div class="row" style="margin-top:12px">
+      <div><label>時</label><input id="bh" type="number" inputmode="numeric" placeholder="5" min="0" max="23"></div>
+      <div><label>分</label><input id="bmin" type="number" inputmode="numeric" placeholder="30" min="0" max="59"></div>
+      <div style="flex:2;min-width:150px"><label>生まれた場所</label>
+        <select id="place"></select></div>
+    </div>
+  </details>
+
+  <button id="go">節目を出す</button>
+  <div id="err" class="err"></div>
+</div>
+
+<div id="out"></div>
+
+<footer>
+  <p>木星・土星・キロンが生まれたときの位置に戻る年（回帰）と、進めた太陽が星座を移る年・生まれたときの天体（月〜冥王星）に届く年・アセンダントとMCに届く年を計算しています。「進めた」は、生まれたあとの太陽が実際に動いた分だけ、出生図ぜんぶを動かすという意味です（ソーラーアーク法。1年に約1度進みます）。</p>
+  <p style="margin-top:10px">生まれたときの天体・アセンダント・MCへの届き方は3つを見ています。<strong>重なる</strong>（コンジャンクション＝0度）、<strong>向かい合う</strong>（オポジション＝180度）、<strong>直角になる</strong>（スクエア＝90度）。この3つは、できごととして表に出やすいと言われます。オーブ（どこまでを「届いた」とするか）は0.5度なので、<strong>書かれた年の前後半年ほど</strong>が効く幅です。天体の位置は <a href="https://www.astro.com/swisseph/" style="color:var(--sub)">Swiss Ephemeris</a> で算出したデータを使っています。</p>
+  <p style="margin-top:10px">作成：旅する星と香りのセラピスト ひろみ</p>
+</footer>
+
+</div>
+
+<script src="ephem.js"></script>
+<script src="ephem_natal.js"></script>
+<script>
+/* ── 天体暦（累積和 → 線形補間） ── */
+function cum(a){const o=new Float64Array(a.length);o[0]=a[0];for(let i=1;i<a.length;i++)o[i]=o[i-1]+a[i];return o;}
+const SER={SUN:cum(EPH_SUN),JUP:cum(EPH_JUP),SAT:cum(EPH_SAT),CHI:cum(EPH_CHI)};
+/* ── 生まれたときの天体（SAの届く先）。0.01度の整数差分 → 累積。精度＝pyswissephとの差 最大0.1度（2026-09-15 3000点で検算） ── */
+const NAT={};[['MOON',NAT_MOON],['MER',NAT_MER],['VEN',NAT_VEN],['MAR',NAT_MAR],['URA',NAT_URA],['NEP',NAT_NEP],['PLU',NAT_PLU]]
+  .forEach(([k,o])=>{const c=new Float64Array(o.d.length);let t=0;for(let i=0;i<o.d.length;i++){t+=o.d[i];c[i]=t/100;}NAT[k]={step:o.step,n:o.n,c:c};});
+function natAt(k,jd){const o=NAT[k],x=(jd-NAT_START_JD)/o.step,i=Math.floor(x);
+  if(i<0||i+1>=o.n)return null;return o.c[i]+(o.c[i+1]-o.c[i])*(x-i);}
+/* ── ドラゴンヘッド（平均交点＝Mean Node）──
+   ★2026-09-16 Hiromi「MCとASCとDH・DTにSA太陽が関わる時はとても重要になります」で追加。
+   ★Hiromiの読みは**Mean Node**（AstroGoldと一致・True Nodeは使わない／[[reference_node_calculation]]）。
+   ⭕生まれた時間は要らない（1日で0.05度しか動かない＝オーブ0.5度に対して十分小さい）。
+   ⚠️DT（ドラゴンテイル）は反対の端なので、別の行にしない＝180度が「向かい合う年」に当たる。 */
+function meanNode(jd){const T=(jd-2451545.0)/36525;
+  const O=125.0445479-1934.1362891*T+0.0020754*T*T+T*T*T/467441-T*T*T*T/60616000;
+  return ((O%360)+360)%360;}
+function lonAt(k,jd){const x=(jd-EPH_START_JD)/EPH_STEP,i=Math.floor(x);
+  if(i<0||i+1>=EPH_N)return null;const a=SER[k];return a[i]+(a[i+1]-a[i])*(x-i);}
+function jdOf(y,m,d,h,mi){const a=Math.floor((14-m)/12),yy=y+4800-a,mm=m+12*a-3;
+  const jdn=d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;
+  return jdn-0.5-9/24+((h||0)+(mi||0)/60)/24;}
+function dateOf(jd){const z=Math.floor(jd+0.5+9/24);let a=z+32044,b=Math.floor((4*a+3)/146097);
+  let c=a-Math.floor(146097*b/4),dd=Math.floor((4*c+3)/1461),e=c-Math.floor(1461*dd/4),mmm=Math.floor((5*e+2)/153);
+  return{y:100*b+dd-4800+Math.floor((mmm+2)/12),m:(mmm+2)%12+1,d:e-Math.floor((153*mmm+2)/5)+1};}
+
+/* ── リターン＝弧が1周するたびに1回だけ数える（逆行の往復を拾わない） ── */
+function returnAges(k,j0,maxAge){
+  const n=lonAt(k,j0),out=[];let lap=1;
+  for(let day=1;day<maxAge*TROP;day+=2){
+    const L=lonAt(k,j0+day);if(L===null)break;
+    const arc=L-n;                                  // 累積なので単調に増える
+    if(arc>=360*lap){                               // その周の1回目だけ
+      let lo=day-2,hi=day;
+      for(let i=0;i<40;i++){const mid=(lo+hi)/2;(lonAt(k,j0+mid)-n>=360*lap)?hi=mid:lo=mid;}
+      out.push({age:hi/TROP,jd:j0+hi});lap++;
+    }
+  }
+  return out;
+}
+/* キロンは逆行で3回前後またぐので、1周ぶんの「通過の全回数」も見る */
+function crossCount(k,j0,cJd){
+  const n=lonAt(k,j0);let c=0,prev=null;
+  for(let day=cJd-j0-400;day<cJd-j0+400;day+=1){
+    const L=lonAt(k,j0+day);if(L===null)continue;
+    const w=((L-n)%360+360)%360,dd=w>180?w-360:w;
+    if(prev!==null&&((prev<0&&dd>=0)||(prev>0&&dd<=0)))c++;
+    prev=dd;
+  }
+  return c;
+}
+/* ── 進行の太陽（1日1年法）がサインを移る年 ── */
+function progSunIngress(j0,maxAge){
+  const s0=lonAt('SUN',j0),out=[];
+  for(let yr=0;yr<=maxAge;yr++){
+    const a=lonAt('SUN',j0+yr),b=lonAt('SUN',j0+yr+1);
+    const sa=Math.floor(a/30),sb=Math.floor(b/30);
+    if(sb>sa){let lo=yr,hi=yr+1;
+      for(let i=0;i<40;i++){const m=(lo+hi)/2;(Math.floor(lonAt('SUN',j0+m)/30)>sa)?hi=m:lo=m;}
+      out.push({age:hi,sign:((sb%12)+12)%12});}
+  }
+  return out;
+}
+/* ── SA＝ソーラーアーク法。出生後の毎日の太陽の移動距離ぶん、出生図全体を動かす ──
+   ⚠️1度1年法（全天体をきっちり1年1度）とは別。年齢がいくほど差が開く（80歳で最大3年ほど）。
+   ★1年の長さは 03_projects/mirai_yomi_report/calc_transits_sa.py（/calc-mirai-aspects）と同じ回帰年。 */
+const TROP=365.242190;
+function arcAt(j0,age){return lonAt('SUN',j0+age)-lonAt('SUN',j0);}   // 累積なので増え続ける
+function ageForArc(j0,arc,maxAge){                                     // 弧 → 何歳か
+  if(arc<=0||arc>=arcAt(j0,maxAge))return null;
+  let lo=0,hi=maxAge;
+  for(let i=0;i<60;i++){const m=(lo+hi)/2;(arcAt(j0,m)<arc)?lo=m:hi=m;}
+  return hi;}
+function saIngress(j0,natal,maxAge){                                   // サインを移る年
+  const out=[];
+  for(let yr=0;yr<maxAge;yr++){
+    const sa=Math.floor(((natal+arcAt(j0,yr))%360+360)%360/30);
+    const sb=Math.floor(((natal+arcAt(j0,yr+1))%360+360)%360/30);
+    if(sa!==sb){
+      let lo=yr,hi=yr+1;
+      for(let i=0;i<50;i++){const m=(lo+hi)/2;
+        (Math.floor(((natal+arcAt(j0,m))%360+360)%360/30)===sa)?lo=m:hi=m;}
+      out.push({age:hi,sign:sb});}}
+  return out;}
+/* ★SAで見るのは コンジャンクション（重なる）・オポジション（向かい合う）・スクエア（直角）の3つ。
+   現象になって表れやすいと言われるため。⚠️オーブは0.5度＝SAは年に約1度なので、前後半年ほどが効く幅。
+   4つの接点は90度ごとに並び、SAは90年で約89度しか進まないので、ふつう一生に1回だけ当たる。 */
+const SA_ORB=0.5;
+const ASPECTS=[[0,"に重なる"],[90,"と直角になる"],[180,"と向かい合う"],[270,"と直角になる"]];
+function saAspect(j0,natal,target,maxAge){
+  const base=((target-natal)%360+360)%360;
+  for(const [ang,ja] of ASPECTS){
+    const arc=(base+ang)%360;
+    if(arc<0.0001)continue;                                          // 生まれた瞬間ぶんは出さない
+    const age=ageForArc(j0,arc,maxAge);
+    if(age!==null)return{age:age,ja:ja,ang:ang};}
+  return null;}
+
+/* ★見るのはASC軸・MC軸の2本だけ。⚠️DC・ICは反対の端なので、別の名前では呼ばない。 */
+const AXNAME={ASC:"アセンダント（人にどう見えるか）",MC:"MC（人生の方向）"};
+const SIGNS=["牡羊座","牡牛座","双子座","蟹座","獅子座","乙女座","天秤座","蠍座","射手座","山羊座","水瓶座","魚座"];
+
+/* ── ASC・MC（時刻と緯度から。天体暦は不要） ── */
+function ascmc(jd,lat,lon){
+  const T=(jd-2451545.0)/36525;
+  let gmst=280.46061837+360.98564736629*(jd-2451545.0)+0.000387933*T*T;
+  gmst=((gmst%360)+360)%360;
+  const lst=((gmst+lon)%360+360)%360, R=Math.PI/180;
+  const e=(23.439291-0.0130042*T)*R, ra=lst*R, la=lat*R;
+  const mc=Math.atan2(Math.tan(ra),Math.cos(e))/R;
+  let MC=((mc%360)+360)%360; if(Math.cos(ra)<0)MC=(MC+180)%360;
+  let ASC=Math.atan2(Math.cos(ra),-(Math.sin(ra)*Math.cos(e)+Math.tan(la)*Math.sin(e)))/R;
+  ASC=((ASC%360)+360)%360;
+  return{ASC:ASC,DC:(ASC+180)%360,MC:MC,IC:(MC+180)%360};
+}
+const PLACES=[["北海道",43.06,141.35],["青森",40.82,140.74],["岩手",39.70,141.15],["宮城",38.27,140.87],["秋田",39.72,140.10],["山形",38.24,140.36],["福島",37.75,140.47],["茨城",36.34,140.45],["栃木",36.57,139.88],["群馬",36.39,139.06],["埼玉",35.86,139.65],["千葉",35.61,140.12],["東京",35.69,139.69],["神奈川",35.45,139.64],["新潟",37.90,139.02],["富山",36.70,137.21],["石川",36.59,136.63],["福井",36.07,136.22],["山梨",35.66,138.57],["長野",36.65,138.18],["岐阜",35.39,136.72],["静岡",34.98,138.38],["愛知",35.18,136.91],["三重",34.73,136.51],["滋賀",35.00,135.87],["京都",35.02,135.76],["大阪",34.69,135.52],["兵庫",34.69,135.18],["奈良",34.69,135.83],["和歌山",34.23,135.17],["鳥取",35.50,134.24],["島根",35.47,133.05],["岡山",34.66,133.93],["広島",34.40,132.46],["山口",34.19,131.47],["徳島",34.07,134.56],["香川",34.34,134.04],["愛媛",33.84,132.77],["高知",33.56,133.53],["福岡",33.61,130.42],["佐賀",33.25,130.30],["長崎",32.74,129.87],["熊本",32.79,130.74],["大分",33.24,131.61],["宮崎",31.91,131.42],["鹿児島",31.56,130.56],["沖縄",26.21,127.68]];
+const sel=document.getElementById('place');
+PLACES.forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.textContent=p[0];
+  if(p[0]==="東京")o.selected=true;sel.appendChild(o);});
+
+/* ── 表示 ── */
+function fy(jd){const t=dateOf(jd);return t.y+"年"+t.m+"月";}
+function run(){
+  const err=document.getElementById('err');err.textContent='';
+  const y=+document.getElementById('by').value,m=+document.getElementById('bm').value,d=+document.getElementById('bd').value;
+  if(!y||!m||!d||y<1920||y>2045||m<1||m>12||d<1||d>31){err.textContent='生まれた年・月・日を入れてください（1920〜2045年）。';return;}
+  const hv=document.getElementById('bh').value, mv=document.getElementById('bmin').value;
+  const hasTime = hv!=='' && !isNaN(+hv);
+  const j0=jdOf(y,m,d,hasTime?+hv:12,hasTime?(+mv||0):0);
+  const today=jdOf(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate(),12,0);
+  const nowAge=(today-j0)/TROP;
+  const rows=[];
+
+  returnAges('JUP',j0,90).forEach(r=>rows.push({age:r.age,jd:r.jd,name:"木星が戻ってくる年",note:"12年に一度"}));
+  returnAges('SAT',j0,90).forEach(r=>rows.push({age:r.age,jd:r.jd,name:"土星が戻ってくる年",note:"30年に一度"}));
+  returnAges('CHI',j0,90).forEach(r=>{
+    const c=crossCount('CHI',j0,r.jd);
+    rows.push({age:r.age,jd:r.jd,name:"キロンが戻ってくる年",note:"一生に一度",once:true,cross:c});});
+  progSunIngress(j0,90).forEach(r=>rows.push({age:r.age,jd:j0+r.age*TROP,
+    name:"進めた太陽が"+SIGNS[r.sign]+"へ",note:"約30年にいちど・あなただけの年"}));
+
+  /* ── 進めた太陽が 生まれたときの天体 に届く年 ──
+     ★2026-09-15 Hiromi決定で追加＝「出て来なすぎても、年表が信じられない」。
+     ⚠️9/14の「出しすぎると混乱」で外したのは"進める側"の月・金星。今回足したのは"届く先"の天体（進めるのは太陽だけのまま）。
+     ⚠️月は生まれた時間がないと位置が決まらない（1日13度動く）ので、時間があるときだけ。 */
+  const N360=x=>((x%360)+360)%360;
+  const nsun=N360(lonAt('SUN',j0));
+  const NATAL=[['MOON','月'],['MER','水星'],['VEN','金星'],['MAR','火星'],['JUP','木星'],['SAT','土星'],['URA','天王星'],['NEP','海王星'],['PLU','冥王星'],['NODE','ドラゴンヘッド']];
+  NATAL.forEach(([k,ja])=>{
+    if(k==='MOON'&&!hasTime)return;
+    const L=(k==='NODE')?meanNode(j0):((k==='JUP'||k==='SAT')?lonAt(k,j0):natAt(k,j0));
+    if(L===null)return;
+    const r=saAspect(j0,nsun,N360(L),90);
+    if(!r)return;
+    /* ★ドラゴンヘッド軸はASC・MCと同じく「とても重要」（2026-09-16 Hiromi）。★を立てて他の天体と区別する。 */
+    rows.push({age:r.age,jd:j0+r.age*TROP,name:"進めた太陽が、生まれたときの"+ja+r.ja+"年",
+      note:(k==='NODE')?"★大きな節目":"あなただけの年",big:(k==='NODE')});});
+
+  /* ── 進めた太陽が ASC軸・MC軸 に届く年 ──
+     ⚠️2026-09-14 Hiromi決定＝進める側は太陽だけ（月・金星は進めない）。★戻さない。 */
+  let angles=null;
+  if(hasTime){
+    const p=PLACES[+sel.value], am=ascmc(j0,p[1],p[2]), ns=N360(lonAt('SUN',j0));
+    /* ⚠️軸は ASC-DC・MC-IC で一直線。4点すべてを回すと同じ年が二重に出るので、軸ごとに1回だけ見る。 */
+    /* ★呼び名は軸のほうにまとめる（2026-09-14 Hiromi「まとめて一つにしたいので」）。
+       ⚠️ディセンダント・ICの名前は出さない＝オポジションは「向かい合う」と言う。 */
+    ['ASC','MC'].forEach(k=>{
+      const r=saAspect(j0,ns,am[k],90);
+      if(!r)return;
+      rows.push({age:r.age,jd:j0+r.age*TROP,name:"進めた太陽が"+AXNAME[k]+r.ja+"年",
+        note:(r.ang===0||r.ang===180)?"一生に一度":"あなただけの年",
+        once:(r.ang===0||r.ang===180),big:(r.ang===0||r.ang===180)});});
+    angles=am;
+  }
+
+  rows.sort((a,b)=>a.age-b.age);
+
+  /* ── 3歳より前は出さない ──
+     ★2026-09-16 Hiromi決定＝「3歳以降にしましょうか？ 2歳まではSAではネイタルの効果期間だとおもうので」
+     ⚠️実際に落ちるのは進めた太陽の行だけ（木星回帰は12歳〜・土星29歳〜・キロン49歳〜なので元から入らない）。
+     ★とくに、生まれたときの水星・金星が太陽のすぐそばにある方は0〜2歳の行が出ていた。 */
+  const MIN_AGE=3;
+  const list=rows.filter(r=>r.age>=MIN_AGE);
+
+  const future=list.filter(r=>r.age>nowAge);
+  let h='';
+  if(future.length){
+    const n=future[0];
+    h+='<div class="next"><div class="lbl">NEXT</div><div class="big">'+fy(n.jd)+'　'+n.name+'</div>'+
+       '<div class="sub">'+Math.round(n.age)+'歳ごろ　／　'+n.note+'</div></div>';
+  }
+  h+='<h2>あなたの節目の年（3〜90歳）</h2><table><tr><th>年</th><th>歳</th><th>できごと</th></tr>';
+  list.forEach(r=>{
+    const cls=r.age<nowAge?'past':(r.age-nowAge<2?'soon':'');
+    h+='<tr class="'+cls+'"><td class="y">'+fy(r.jd)+'</td><td class="y">'+Math.round(r.age)+'</td><td>'+r.name+
+       (r.once?'<span class="tag once">一生に一度</span>':'')+
+       (r.cross&&r.cross>1?'<span class="tag">'+r.cross+'回とおります</span>':'')+'</td></tr>';
+  });
+  h+='</table>';
+  if(!hasTime){
+    h+='<p class="note" style="margin-top:14px">生まれた時間がわかると、<strong>とくに大きい節目</strong>（アセンダント・MC）と、生まれたときの月に届く年まで出ます。上の「＋ 生まれた時間と場所がわかる方へ」から入れてみてください。</p>';
+  }
+  h+='<div class="cta"><h3>この年に、何が起きるのでしょう</h3>'+
+     '<p>ここに出ているのは「いつ来るか」だけです。その年に何が起きて、どう過ごすと楽に進めるのかは、記事にまとめました。</p>'+
+     '<a href="#" id="artlink">▶ 記事を読む</a></div>';
+  const out=document.getElementById('out');out.innerHTML=h;out.style.display='block';
+  out.scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.getElementById('go').addEventListener('click',run);
+document.addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+</script>
+</body>
+</html>

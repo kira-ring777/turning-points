@@ -1,0 +1,11 @@
+.DS_Store
+*.log
+.playwright-mcp/
+
+# ⚠️公開しないもの（検算・生成スクリプト＝手元だけ）
+# ★理由＝検算の例に [1966,1,6] のような日付が入っている（CLAUDE.md 書く前2.5）
+check.js
+check_sa.js
+check_natal.js
+verify.js
+gen_natal.py
