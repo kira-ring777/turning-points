@@ -281,12 +281,14 @@ function run(){
   if(future.length){
     const n=future[0];
     h+='<div class="next"><div class="lbl">NEXT</div><div class="big">'+fy(n.jd)+'　'+n.name+'</div>'+
-       '<div class="sub">'+Math.round(n.age)+'歳ごろ　／　'+n.note+'</div></div>';
+       '<div class="sub">'+Math.floor(n.age)+'歳ごろ　／　'+n.note+'</div></div>';
   }
+  /* ★2026-09-16 Hiromi「1回目の木星回帰は11歳8か月。12歳と丸めちゃうのはどうなんでしょう」
+     → ★**満年齢（切り捨て）にした。** ⚠️四捨五入に戻さない。年月は「年」の列に出ているので、そちらで細かさは足りる。 */
   h+='<h2>あなたの節目の年（3〜90歳）</h2><table><tr><th>年</th><th>歳</th><th>できごと</th></tr>';
   list.forEach(r=>{
     const cls=r.age<nowAge?'past':(r.age-nowAge<2?'soon':'');
-    h+='<tr class="'+cls+'"><td class="y">'+fy(r.jd)+'</td><td class="y">'+Math.round(r.age)+'</td><td>'+r.name+
+    h+='<tr class="'+cls+'"><td class="y">'+fy(r.jd)+'</td><td class="y">'+Math.floor(r.age)+'</td><td>'+r.name+
        (r.once?'<span class="tag once">一生に一度</span>':'')+
        /* ★2026-09-16 Hiromi「MCとASCとDH・DTにSA太陽が関わる時はとても重要」＝軸とドラゴンヘッドに札を出す。
           ⚠️「一生に一度」の札は付けない（SAはどれも一度きりなので、そこだけに付けると誤解になる）。 */
