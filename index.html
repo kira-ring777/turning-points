@@ -38,6 +38,10 @@ tr.past td{color:#AAA299}
 tr.soon td{background:#FFFBF4}
 .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;background:var(--gold-l);color:#6B5636;margin-left:6px;vertical-align:2px}
 .tag.once{background:#F2DDE7;color:var(--hl)}
+/* ★2026-09-21 読み方のラベル（回帰／空の星／SA）。⚠️.tag と見た目を分ける＝行頭に出るので枠線だけにした */
+.kind{display:inline-block;font-size:11px;padding:0 6px;border-radius:4px;margin-right:8px;
+      border:1px solid currentColor;opacity:.85;vertical-align:1px;white-space:nowrap}
+.kind.kr{color:#8A6D3B}.kind.kt{color:#4A6E8A}.kind.ks{color:#7A5A86}
 .cta{margin-top:36px;background:var(--cream);border:1px solid var(--gold-l);border-radius:8px;padding:22px}
 .cta h3{font-family:"Hiragino Mincho ProN",serif;font-size:16.5px;font-weight:600;margin-bottom:8px}
 .cta p{font-size:14.5px;margin-bottom:12px}
@@ -79,7 +83,7 @@ footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-si
 
 <h2 style="margin-top:34px">「進めた太陽」は、どう動くのでしょう</h2>
 
-<p class="note" style="margin-top:10px">星で時期を読むやり方は、ひとつではありません。上の表にも、2つが混ざっています。ひとつは、<strong>実際の空で星が動いて、生まれたときの場所に戻ってくる年</strong>を見るやり方（木星・土星・キロンの年が、これです）。それとは別に、<strong>生まれたときの図そのものを動かして出す年</strong>を見るやり方があります。ここで見ている「進めた太陽」は、こちらです（ソーラーアーク法＝図ぜんぶを、太陽が進んだぶんだけ動かす読み方）。</p>
+<p class="note" style="margin-top:10px">星で時期を読むやり方は、ひとつではありません。上の表にも、2つが混ざっています。ひとつは、<strong>実際の空で、星が動いていく</strong>のを見るやり方。生まれたときの場所に<strong>戻ってくる年</strong>（木星・土星・キロン）と、一周の途中で<strong>90度・180度まで来る年</strong>（40代に重なる4つ）が、これです。それとは別に、<strong>生まれたときの図そのものを動かして出す年</strong>を見るやり方があります。ここで見ている「進めた太陽」は、こちらです（ソーラーアーク法＝図ぜんぶを、太陽が進んだぶんだけ動かす読み方）。</p>
 
 <svg viewBox="0 0 300 206" width="100%" style="max-width:380px;display:block;margin:16px auto 0" role="img" aria-label="円盤の上を、生まれたときの星が30年かけて30度ぶん進み、となりの星座に入る図">
   <path d="M 150.0 105.0 L 200.2 76.0 A 58 58 0 0 0 179.0 54.8 Z" fill="#E3D3BC" opacity="0.5"/>
@@ -110,7 +114,7 @@ footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-si
 <p class="note" style="margin-top:12px">星の並びは、生まれたときのまま変わりません。<strong>円ごと、1年に約1度ずつ回っていきます</strong>。だから、どの星も軸も、そろって動きます。回っていくうちに、ある星の上を通ったり、星座の境目をまたいだりする。その年が、上の表に出てきた「節目の年」です。</p>
 
 <footer>
-  <p>木星・土星・キロンが生まれたときの位置に戻る年（回帰）と、進めた太陽が星座を移る年・生まれたときの天体（月〜冥王星）とドラゴンヘッドに届く年・アセンダントとMCに届く年を計算しています。</p>
+  <p>木星・土星・キロンが生まれたときの位置に戻る年（回帰）、空の冥王星・天王星・海王星・土星が生まれたときの位置から90度・180度まで来る年、進めた太陽が星座を移る年・生まれたときの天体（月〜冥王星）とドラゴンヘッドに届く年・アセンダントとMCに届く年を計算しています。</p>
   <p style="margin-top:10px">生まれたときの天体・アセンダント・MCへの届き方は3つを見ています。<strong>重なる</strong>（コンジャンクション＝0度）、<strong>向かい合う</strong>（オポジション＝180度）、<strong>直角になる</strong>（スクエア＝90度）。この3つは、できごととして表に出やすいと言われます。オーブ（どこまでを「届いた」とするか）は1度なので、<strong>書かれた年の前後1年ほど</strong>が効く幅です。天体の位置は <a href="https://www.astro.com/swisseph/" style="color:var(--sub)">Swiss Ephemeris</a> で算出したデータを使っています。</p>
   <p style="margin-top:10px">作成：旅する星と香りのセラピスト ひろみ</p>
 </footer>
@@ -185,6 +189,42 @@ function crossCount(k,j0,cJd){
   }
   return c;
 }
+/* ── 40代に、みんなに来る節目（＝一周の途中の角度）── 2026-09-20 追加
+   ★回帰は「一周して戻る」。その一周の"途中"にも節目がある。
+     半周＝向かい合う（180度）／4分の1周＝直角（90度）。★時計の6時と3時。
+   ⚠️読みの出典＝output/articles/membership/2026-05-28_ミドルエイジの星-自分らしさの選び直し.md
+   ⚠️天王星・海王星・冥王星は NAT_（10日刻み・1920〜2045年）を使う。
+     精度＝pyswissephとの差 最大0.1度 ＝ 天王星で約8日・海王星で約17日・冥王星で約26日。
+     ★出すのは「年」なので、このずれは幅の中に収まる。★触ったら check_midlife.js を走らせる。 */
+function tLon(k){return (k==='SUN'||k==='JUP'||k==='SAT'||k==='CHI')?(jd=>lonAt(k,jd)):(jd=>natAt(k,jd));}
+function arcAge(get,j0,deg,maxAge){
+  const n=get(j0); if(n===null)return null;
+  for(let day=1;day<maxAge*TROP;day+=2){
+    const L=get(j0+day); if(L===null)break;
+    if(L-n>=deg){                                   // 累積なので単調に増える。逆行の往復は拾わず1回目だけ
+      let lo=day-2,hi=day;
+      for(let i=0;i<40;i++){const mid=(lo+hi)/2;(get(j0+mid)-n>=deg)?hi=mid:lo=mid;}
+      return{age:hi/TROP,jd:j0+hi};}
+  }
+  return null;}
+/* 逆行で前後する回数（キロン回帰の crossCount と同じ数え方） */
+function passCount(get,j0,deg,cJd){
+  const n=get(j0);let c=0,prev=null;
+  for(let day=cJd-j0-500;day<cJd-j0+500;day+=1){
+    const L=get(j0+day);if(L===null)continue;
+    const dd=(L-n)-deg;
+    if(prev!==null&&((prev<0&&dd>=0)||(prev>0&&dd<=0)))c++;
+    prev=dd;}
+  return c;}
+/* ⚠️★角度は「生まれたときから進んだ弧の合計」。一周ぶん先のものは 360 を足す。
+   ★土星の向かい合いは一生に3回（14歳・44歳・74歳）。ミドルエイジは**2回目**なので 180+360=540。
+     ⚠️180 のままだと14歳が出る（2026-09-20 検算で発覚）。
+   ★天王星（84年）・海王星（165年）は、1回目がそのまま40代に来る。 */
+/* ★2026-09-20 Hiromi「スクエア（90度）がしっくりきます」＝記事の見出しと同じ言葉にそろえてある。
+   ✅2026-09-21 確認＝SAの行（ASPECTS）も「スクエア（90度）／オポジション（180度）」にそろっている。混在は解消済み。 */
+const MIDLIFE=[['PLU','冥王星',90,'とスクエア（90度）になる'],['URA','天王星',180,'とオポジション（180度）になる'],
+               ['NEP','海王星',90,'とスクエア（90度）になる'],['SAT','土星',540,'とオポジション（180度）になる']];
+
 /* ── 進行の太陽（1日1年法）がサインを移る年 ── */
 function progSunIngress(j0,maxAge){
   const s0=lonAt('SUN',j0),out=[];
@@ -226,7 +266,10 @@ function saIngress(j0,natal,maxAge){                                   // サイ
      ★オーブ1度（前後1年）なら、このずれは幅の中に収まる。
    4つの接点は90度ごとに並び、SAは90年で約89度しか進まないので、ふつう一生に1回だけ当たる。 */
 const SA_ORB=1.0;
-const ASPECTS=[[0,"に重なる"],[90,"と直角になる"],[180,"と向かい合う"],[270,"と直角になる"]];
+/* ★2026-09-20 Hiromi「スクエア（90度）がしっくりきます」→ 表の言い方を1つにそろえた。
+   ⚠️記事の「「コンジャンクション」「スクエア」「オポジション」の違い」の節と同じ語。片方だけ直さない。 */
+const ASPECTS=[[0,"とコンジャンクション（0度）になる"],[90,"とスクエア（90度）になる"],
+               [180,"とオポジション（180度）になる"],[270,"とスクエア（90度）になる"]];
 function saAspect(j0,natal,target,maxAge){
   const base=((target-natal)%360+360)%360;
   for(const [ang,ja] of ASPECTS){
@@ -271,12 +314,28 @@ function run(){
   const nowAge=(today-j0)/TROP;
   const rows=[];
 
-  returnAges('JUP',j0,90).forEach(r=>rows.push({age:r.age,jd:r.jd,name:"木星が戻ってくる年",note:"12年に一度"}));
-  returnAges('SAT',j0,90).forEach(r=>rows.push({age:r.age,jd:r.jd,name:"土星が戻ってくる年",note:"30年に一度"}));
+  returnAges('JUP',j0,90).forEach(r=>rows.push({age:r.age,jd:r.jd,kind:"回帰",name:"木星が戻ってくる年",note:"12年に一度"}));
+  returnAges('SAT',j0,90).forEach(r=>rows.push({age:r.age,jd:r.jd,kind:"回帰",name:"土星が戻ってくる年",note:"30年に一度"}));
   returnAges('CHI',j0,90).forEach(r=>{
     const c=crossCount('CHI',j0,r.jd);
-    rows.push({age:r.age,jd:r.jd,name:"キロンが戻ってくる年",note:"一生に一度",once:true,cross:c});});
-  progSunIngress(j0,90).forEach(r=>rows.push({age:r.age,jd:j0+r.age*TROP,
+    rows.push({age:r.age,jd:r.jd,kind:"回帰",name:"キロンが戻ってくる年",note:"一生に一度",once:true,cross:c});});
+
+  /* ── 40代に、みんなに来る節目（2026-09-20 追加）──
+     ⚠️2巡目のサターンリターン（58〜60歳）とキロンリターン（50歳前後）は、
+       上の returnAges がすでに出している。ここで二重に出さない。 */
+  MIDLIFE.forEach(([k,ja,deg,word])=>{
+    const g=tLon(k),r=arcAge(g,j0,deg,90); if(!r)return;
+    /* ★2026-09-20 Hiromi「空の冥王星が生まれた時の冥王星とスクエア…で入れたほうがいい」
+       ★2026-09-21 Hiromi承認＝後半を「生まれたときの位置」で受けてA案に短縮（天体名が2回出てくどかった）。
+       ⏹️同日、文頭の「空の」も外した＝行頭のラベル〈空の星〉が同じ役目を持つので「空の星｜空の冥王星が」と重なっていた。
+       ⚠️★ラベルを外すときは「空の」を戻す。どちらか一方は要る（どちらが空でどちらが出生か分からなくなる）。
+       ⚠️★記事（output/articles/2026-09-23_人生のリズムに楽に乗る.md）の見出しは「空の冥王星が、生まれたときの
+         冥王星と…」のまま。記事にはラベルが無いので「空の」が要る＝意図的な差。片方に合わせて直さない。
+       ⚠️表で「進めた太陽が、生まれたときの冥王星とスクエア（90度）」の行と並ぶので、
+         見分けは主語（空の◯◯／進めた太陽）が持つ。★ここを消さない。 */
+    rows.push({age:r.age,jd:r.jd,kind:"空の星",name:ja+"が、生まれたときの位置"+word+"年",
+      note:"みんなに来る節目",mid:true,pass:passCount(g,j0,deg,r.jd)});});
+  progSunIngress(j0,90).forEach(r=>rows.push({age:r.age,jd:j0+r.age*TROP,kind:"SA",
     name:"進めた太陽が"+SIGNS[r.sign]+"へ",note:"約30年にいちど・あなただけの年"}));
 
   /* ── 進めた太陽が 生まれたときの天体 に届く年 ──
@@ -293,7 +352,7 @@ function run(){
     const r=saAspect(j0,nsun,N360(L),90);
     if(!r)return;
     /* ★ドラゴンヘッド軸はASC・MCと同じく「とても重要」（2026-09-16 Hiromi）。★を立てて他の天体と区別する。 */
-    rows.push({age:r.age,jd:j0+r.age*TROP,name:"進めた太陽が、生まれたときの"+ja+r.ja+"年",
+    rows.push({age:r.age,jd:j0+r.age*TROP,kind:"SA",name:"進めた太陽が、生まれたときの"+ja+r.ja+"年",
       note:(k==='NODE')?"★大きな節目":"あなただけの年",big:(k==='NODE')});});
 
   /* ── 進めた太陽が ASC軸・MC軸 に届く年 ──
@@ -307,9 +366,9 @@ function run(){
     ['ASC','MC'].forEach(k=>{
       const r=saAspect(j0,ns,am[k],90);
       if(!r)return;
-      /* ★2026-09-16 Hiromi「SAについてはすべてのものが一生に一回です」＝軸だけに「一生に一度」の札を出すと、
+      /* ★2026-09-16 Hiromi「SAについてはすべてのものが一生に一回です」＝軸だけに「一生に一度」のラベルを出すと、
          ほかのSAの行が「二度来る」と読めてしまう。★軸は「とくに大きい」に変え、「一生に一度」はキロン回帰だけに残した。 */
-      rows.push({age:r.age,jd:j0+r.age*TROP,name:"進めた太陽が"+AXNAME[k]+r.ja+"年",
+      rows.push({age:r.age,jd:j0+r.age*TROP,kind:"SA",name:"進めた太陽が"+AXNAME[k]+r.ja+"年",
         note:"★大きな節目",big:true});});
     angles=am;
   }
@@ -332,18 +391,37 @@ function run(){
   }
   /* ★2026-09-16 Hiromi「1回目の木星回帰は11歳8か月。12歳と丸めちゃうのはどうなんでしょう」
      → ★**満年齢（切り捨て）にした。** ⚠️四捨五入に戻さない。年月は「年」の列に出ているので、そちらで細かさは足りる。 */
-  h+='<h2>あなたの節目の年（3〜90歳）</h2><table><tr><th>年</th><th>歳</th><th>できごと</th></tr>';
+  /* ★2026-09-21 新設＝ラベルの言葉を、表に入る前に1行で説明する。
+     ★同日 Hiromi「ラベルはどう？」＝それまで「札」と呼んでいたものを**ラベル**に統一した
+       （読者に見えるのはここ1か所だったが、コメントも全部そろえた。⚠️「札」に戻さない）。
+     ⚠️「SA」は説明なしでは伝わらない（専門用語は初出に注釈をつける）。
+     ★ラベルの言葉（回帰／空の星／SA）と1字ずつ同じにする。片方だけ直さない。
+     ⚠️★初案「読み方が3つ混ざっています」はHiromiが差し戻し＝ページ下の説明が同じ表を
+       「2つが混ざっています」と書いていて、数が食い違っていた（やり方は2つ・ラベルは3つ）。
+       → ★**ここはラベルの辞書。数を言わない**（「ラベルの見方」だけ）。⚠️数を書き足さない。 */
+  h+='<h2>あなたの節目の年（3〜90歳）</h2>'+
+     '<p class="note" style="margin:-4px 0 10px"><strong>ラベルの見方</strong>　'+
+     '<span class="kind kr">回帰</span>空の星が、生まれたときの場所に<strong>戻ってくる</strong>年　'+
+     '<span class="kind kt">空の星</span>空の星が、生まれたときの場所から<strong>90度・180度まで来る</strong>年　'+
+     '<span class="kind ks">SA</span>生まれたときの図ごと動かして出す年（ソーラーアーク法＝進めた太陽）</p>'+
+     '<table><tr><th>年</th><th>歳</th><th>できごと</th></tr>';
   list.forEach(r=>{
     const cls=r.age<nowAge?'past':(r.age-nowAge<2?'soon':'');
-    h+='<tr class="'+cls+'"><td class="y">'+fy(r.jd)+'</td><td class="y">'+Math.floor(r.age)+'</td><td>'+r.name+
+    /* ★2026-09-21 Hiromi「トランジットなのかSAなのかリターンなのかがぱっと見わからない」＝行頭に読み方のラベル。
+       ⚠️ラベルの言葉は表の上の凡例と1字ずつ同じにする。片方だけ直さない。 */
+    const kindTag = r.kind ? '<span class="kind k'+({'回帰':'r','空の星':'t','SA':'s'}[r.kind])+'">'+r.kind+'</span>' : '';
+    h+='<tr class="'+cls+'"><td class="y">'+fy(r.jd)+'</td><td class="y">'+Math.floor(r.age)+'</td><td>'+kindTag+r.name+
        (r.once?'<span class="tag once">一生に一度</span>':'')+
-       /* ★2026-09-16 Hiromi「MCとASCとDH・DTにSA太陽が関わる時はとても重要」＝軸とドラゴンヘッドに札を出す。
-          ⚠️「一生に一度」の札は付けない（SAはどれも一度きりなので、そこだけに付けると誤解になる）。 */
+       /* ★2026-09-16 Hiromi「MCとASCとDH・DTにSA太陽が関わる時はとても重要」＝軸とドラゴンヘッドにラベルを出す。
+          ⚠️「一生に一度」のラベルは付けない（SAはどれも一度きりなので、そこだけに付けると誤解になる）。 */
        (r.big&&!r.once?'<span class="tag once">とくに大きい</span>':'')+
-       (r.cross&&r.cross>1?'<span class="tag">'+r.cross+'回とおります</span>':'')+'</td></tr>';
+       (r.cross&&r.cross>1?'<span class="tag">'+r.cross+'回とおります</span>':'')+
+       /* ⏹️2026-09-21 40代の4つの通過回数は出さない（Hiromi「目立ちすぎ」）。
+          ⚠️32点中28点に付くので、ラベルにしても見分けにならなかった。★計算（pass）は残してある。 */
+       '</td></tr>';
   });
   h+='</table>';
-  /* ★2026-09-16 Hiromi「SAについてはすべてのものが一生に一回です」。札は増やさず、ここで一行だけ言う。 */
+  /* ★2026-09-16 Hiromi「SAについてはすべてのものが一生に一回です」。ラベルは増やさず、ここで一行だけ言う。 */
   h+='<p class="note" style="margin-top:12px">「進めた太陽が〜」の行は、<strong>どれも一生に一度きり</strong>です。90年かけても87度ほどしか進まないので、同じ天体に二度は届きません。</p>';
   if(!hasTime){
     h+='<p class="note" style="margin-top:14px">生まれた時間がわかると、<strong>とくに大きい節目</strong>（アセンダント・MC）と、生まれたときの月に届く年まで出ます。上の「＋ 生まれた時間と場所がわかる方へ」から入れてみてください。</p>';
