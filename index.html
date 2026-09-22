@@ -430,10 +430,25 @@ function run(){
      '<p>ここに出ているのは「いつ星の節目が来るか」だけです。その年にどんなテーマが動くのか、過去の節目でどう答え合わせをするのかは、記事にまとめました。</p>'+
      '<a href="#" id="artlink">▶ 記事を読む</a></div>';
   const out=document.getElementById('out');out.innerHTML=h;out.style.display='block';
+  try{if(window.__count)window.__count('calc');}catch(e){}
   out.scrollIntoView({behavior:'smooth',block:'start'});
 }
 document.getElementById('go').addEventListener('click',run);
 document.addEventListener('keydown',e=>{if(e.key==='Enter')run();});
+</script>
+<!-- 利用カウンター（2026-09-23）｜⚠️生年月日などの入力値は送らない。送るのは「開いた」「計算した」という事実だけ。
+     数字の読み方＝ https://abacus.jasoncameron.dev/get/hiromi-tp-2026/open と .../calc をブラウザで開く（開いても増えない）
+     ⚠️計算を止めないため、すべて try/catch で包み、失敗しても何もしない -->
+<script>
+(function(){
+  try{
+    var BASE='https://abacus.jasoncameron.dev/hit/hiromi-tp-2026/';
+    window.__count=function(key){
+      try{ fetch(BASE+key,{cache:'no-store',keepalive:true})['catch'](function(){}); }catch(e){}
+    };
+    window.__count('open');
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
